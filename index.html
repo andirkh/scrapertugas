@@ -6,27 +6,139 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <title>OLX Chart: Jual-Beli Motor Bekas</title>
+  <title>Cloud Computing: Andi Rokhman Hermawan - 07111850050003</title>
 </head>
 <body>
   <div class="container">
-    <canvas id="myChart"></canvas>
+    <div style="position: relative; height:40vh; width:80vw; margin-bottom: 80vh">
+      <canvas id="myChart"></canvas>
+    <div>
+    <button onclick="chooseHonda()">
+      Honda
+    </button>
+    <button onclick="chooseYamaha()">
+      Yamaha
+    </button>
+    <button onclick="chooseSuzuki()">
+      Suzuki
+    </button>
+    <button onclick="chooseKawasaki()">
+      Kawasaki
+    </button>
+    <div style="position: relative; height:60vh; width:80vw">
+      <canvas id="pieChart"></canvas>
+    </div>
+    </div>
   </div>
   <script type="text/javascript">
-    var d = {"labels": ["Bandung Kota", "Denpasar Kota", "Jakarta Selatan", "Surabaya Kota", "Jakarta Barat", "Jakarta Timur", "Bekasi Kota", "Depok Kota", "Tangerang Kota", "Tangerang Selatan Kota"],
-    "k1": [279, 231, 41, 25],
-    "k2": [310, 189, 34, 5],
-    "k3": [266, 203, 34, 34],
-    "k4": [316, 159, 32, 14],
-    "k5": [225, 237, 30, 17],
-    "k6": [243, 202, 40, 17],
-    "k7": [216, 182, 36, 24],
-    "k8": [198, 190, 46, 11],
-    "k9": [214, 187, 37, 5],
-    "k10": [191, 189, 37, 12]
+    const allData = [
+      {
+        'kota': 'Bandung Kota',
+        'motor': {
+          'honda': 279,
+          'yamaha': 231,
+          'suzuki': 41,
+          'kawasaki': 25,
+        }
+      },
+      {
+        'kota': 'Denpasar Kota',
+        'motor': {
+          'honda': 310,
+          'yamaha': 189,
+          'suzuki': 34,
+          'kawasaki': 5,
+        }
+      },
+      {
+        'kota': 'Jakarta Selatan',
+        'motor': {
+          'honda': 266,
+          'yamaha': 203,
+          'suzuki': 34,
+          'kawasaki': 34,
+        }
+      },
+      {
+        'kota': 'Surabaya Kota',
+        'motor': {
+          'honda': 316,
+          'yamaha': 159,
+          'suzuki': 32,
+          'kawasaki': 14,
+        }
+      },
+      {
+        'kota': 'Jakarta Barat',
+        'motor': {
+          'honda': 225,
+          'yamaha': 237,
+          'suzuki': 30,
+          'kawasaki': 17,
+        }
+      },
+      {
+        'kota': 'Jakarta Timur',
+        'motor': {
+          'honda': 243,
+          'yamaha': 202,
+          'suzuki': 40,
+          'kawasaki': 17,
+        }
+      },
+      {
+        'kota': 'Bekasi Kota',
+        'motor': {
+          'honda': 216,
+          'yamaha': 182,
+          'suzuki': 36,
+          'kawasaki': 24,
+        }
+      },
+      {
+        'kota': 'Depok Kota',
+        'motor': {
+          'honda': 198,
+          'yamaha': 190,
+          'suzuki': 46,
+          'kawasaki': 11,
+        }
+      },
+      {
+        'kota': 'Tangerang Kota',
+        'motor': {
+          'honda': 214,
+          'yamaha': 187,
+          'suzuki': 37,
+          'kawasaki': 5,
+        }
+      },
+      {
+        'kota': 'Tangerang Kota Selatan',
+        'motor': {
+          'honda': 191,
+          'yamaha': 189,
+          'suzuki': 37,
+          'kawasaki': 12,
+        }
+      },
+    ]
+
+    const d = {"labels": ["Bandung Kota", "Denpasar Kota", "Jakarta Selatan", "Surabaya Kota", "Jakarta Barat", "Jakarta Timur", "Bekasi Kota", "Depok Kota", "Tangerang Kota", "Tangerang Selatan Kota"],
+      "k1": [279, 231, 41, 25],
+      "k2": [310, 189, 34, 5],
+      "k3": [266, 203, 34, 34],
+      "k4": [316, 159, 32, 14],
+      "k5": [225, 237, 30, 17],
+      "k6": [243, 202, 40, 17],
+      "k7": [216, 182, 36, 24],
+      "k8": [198, 190, 46, 11],
+      "k9": [214, 187, 37, 5],
+      "k10": [191, 189, 37, 12]
     };
 
-    var olxChart = document.getElementById('myChart')
+    const olxChart = document.getElementById('myChart')
+    const pieChart = document.getElementById('pieChart').getContext('2d')
 
     var chart = new Chart(olxChart,{
       type:'bar',
@@ -55,10 +167,11 @@
         }]
       },
       options:{
+        responsive: true,
         title:{
           position:'top',
           display:true,
-          text:['OLX - Sepuluh Kota/Kabupaten dengan Total Terbanyak Penjualan Motor Bekas','(Honda, Yamaha, Suzuki, Kawasaki)'],
+          text:['OLX - Motor bekas di 10 Kota/Kabupaten','(Honda, Yamaha, Suzuki, Kawasaki)'],
           fontSize:18,
           padding:30
         },
@@ -82,6 +195,79 @@
         }
       }
     });
+
+    // PIE CHART !
+    const getLabel = allData.map(function(data) {
+      return data.kota;
+    })
+
+    const getDataHonda = allData.map(function(data) {
+      return data.motor.honda;
+    })
+
+    const getDataSuzuki = allData.map(function(data) {
+      return data.motor.suzuki
+    })
+
+    const getDataYamaha = allData.map(function(data) {
+      return data.motor.yamaha
+    })
+
+    const getDataKawasaki = allData.map(function(data) {
+      return data.motor.kawasaki
+    })
+
+    var myChart = new Chart(pieChart, {
+        type: 'pie',
+        data: {
+            labels: getLabel,
+            datasets: [{
+                data: getDataHonda, // Specify the data values array
+
+                borderColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896', 'red', 'green', 'yellow', 'black', 'gray', 'blue'], // Add custom color border
+                backgroundColor: ['#2196f38c', '#f443368c', '#3f51b570', '#00968896', 'red', 'green', 'yellow', 'black', 'gray', 'blue'], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]},
+        options: {
+          title:{
+            position:'top',
+            display:true,
+            text:['Data Motor Honda'],
+            fontSize:18,
+            padding:30
+          },
+          responsive: true, // Instruct chart js to respond nicely.
+          maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+        }
+    });
+
+    var chooseHonda = function() {
+      console.log("chooseHonda");
+      myChart.options.title.text = "Data Motor Honda"
+      myChart.data.datasets[0].data = getDataHonda
+      myChart.update()
+    };
+
+    var chooseYamaha = function() {
+      console.log("chooseYamaha");
+      myChart.options.title.text = "Data Motor Yamaha"
+      myChart.data.datasets[0].data = getDataYamaha
+      myChart.update()
+    }
+
+    var chooseSuzuki = function(){
+      console.log("chooseSuzuki");
+      myChart.options.title.text = "Data Motor Suzuki"
+      myChart.data.datasets[0].data = getDataSuzuki
+      myChart.update()
+    }
+
+    var chooseKawasaki = function() {
+      console.log("chooseKawasaki");
+      myChart.options.title.text = "Data Motor Kawasaki"
+      myChart.data.datasets[0].data = getDataKawasaki
+      myChart.update()
+    }
   </script>
 </body>
 </html>
